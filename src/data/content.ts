@@ -42,7 +42,7 @@ export const about = {
 }
 
 export const conceptsIntro = {
-  script: 'the',
+  script: 'our styles',
   title: 'Concept',
   body: 'Bấm vào từng concept để xem thêm ảnh và chọn phong cách hợp với hai bạn.',
 }

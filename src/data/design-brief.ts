@@ -5,7 +5,9 @@
  *   cặp chữ script + serif in hoa cho tiêu đề, dải ảnh full-bleed tối có khung kem, khối "client notes" nền tối.
  * Layout: Editorial / asymmetric + image-first. Ảnh dẫn dắt, chữ ngắn, CTA đặt lịch luôn trong tầm tay.
  * Palette: nền kem/ngà, chữ nâu espresso, đường kẻ cát; dùng token trong src/styles/index.css, không hard-code màu.
- * Type: Cormorant Garamond (display, Light 300), Great Vibes (script, cụm ngắn), Be Vietnam Pro (body).
+ * Type (theo font-chu.md): Playfair Display Black 900 + chữ ký Mrs Saint Delafield (chỉ hero, 1 lần/trang, lệch phải, xoay -8°, màu champagne);
+ *   Playfair Italic 400 cho H2 (48→32px), tên album, trích dẫn; Playfair Bold Italic 700 cho tên gói, giá; số điện thoại dùng Be Vietnam Pro (số Playfair khó đọc);
+ *   Be Vietnam Pro 300/400 (16px) cho mô tả, menu, form, nút. Nhãn nhỏ trên tiêu đề là chữ in hoa Be Vietnam, không dùng chữ viết tay.
  * Media: ảnh thật của khách, không bo góc; không dùng ảnh đã dàn trang sẵn làm ảnh đơn.
  * Density: thoáng, mỗi section một ý; khoảng trắng rộng ở desktop, gọn ở mobile.
  * Motion: signature là hero — hàng 3 ảnh bằng nhau (mobile ~1.5), khe nhỏ, chạy phải→trái;

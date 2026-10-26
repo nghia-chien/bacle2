@@ -55,7 +55,7 @@ export function Hero() {
             {site.name} – {site.category} tại {site.city}
           </span>
           <span aria-hidden="true" className="-mx-16 -my-12 block overflow-hidden px-16 py-12 leading-[0.82]">
-            <span className="inline-block text-[clamp(5rem,26vw,22rem)] tracking-(--tracking-wordmark) md:text-[17vw] xl:text-[15rem]">
+            <span className="inline-block text-[clamp(4rem,22vw,22rem)] font-black tracking-[0.01em] not-italic md:text-[15vw] xl:text-[13rem]">
               {hero.wordmark.split('').map((ch, i) => (
                 <span key={i} data-hero-letter className="inline-block">
                   {ch}
@@ -65,12 +65,34 @@ export function Hero() {
           </span>
           <span
             aria-hidden="true"
-            data-hero-sub
-            className="script -mt-[0.15em] block pl-[30vw] text-[clamp(2rem,6.5vw,4.5rem)] md:pl-[24vw] xl:pl-[20rem]"
+            className="script mt-2 inline-block translate-x-[16vw] -rotate-[8deg] text-[clamp(2.75rem,9vw,6.5rem)] text-champagne md:-mt-[0.3em] md:translate-x-[17vw] xl:translate-x-[15rem] invisible"
           >
             {hero.sub}
           </span>
         </h1>
+        {/* Chữ ký nằm ở lớp trước mọi ảnh để luôn thấy được; bản sao vô hình của chữ BACLE chỉ để giữ đúng vị trí */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[25] flex flex-col items-center justify-center text-center [text-shadow:0_4px_44px_rgb(35_26_22/0.7),0_2px_10px_rgb(35_26_22/0.4)]"
+        >
+          <span className="invisible block">
+            <span className="-mx-16 -my-12 block overflow-hidden px-16 py-12 leading-[0.82]">
+              <span className="inline-block text-[clamp(4rem,22vw,22rem)] font-black tracking-[0.01em] not-italic md:text-[15vw] xl:text-[13rem]">
+                {hero.wordmark.split('').map((ch, i) => (
+                  <span key={i} className="inline-block">
+                    {ch}
+                  </span>
+                ))}
+              </span>
+            </span>
+          </span>
+          <span
+            data-hero-sub
+            className="script mt-2 inline-block translate-x-[16vw] -rotate-[8deg] text-[clamp(2.75rem,9vw,6.5rem)] text-champagne md:-mt-[0.3em] md:translate-x-[17vw] xl:translate-x-[15rem]"
+          >
+            {hero.sub}
+          </span>
+        </div>
         <div data-hero-front className="absolute inset-x-4 bottom-[7%] z-30 flex justify-center gap-2 md:bottom-[8%] md:gap-3">
           <LinkButton href={hero.primaryCta.href} className="px-4! md:px-7!">
             {hero.primaryCta.label}

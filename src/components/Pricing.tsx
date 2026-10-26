@@ -27,14 +27,14 @@ export function Pricing() {
 
       <div className="relative flex min-h-[180dvh] items-center justify-center px-4 py-[45dvh]">
         <div className="w-full max-w-2xl bg-cream px-6 py-16 text-center shadow-[0_30px_80px_-30px_rgb(35_26_22/0.6)] md:px-14 md:py-20">
-          <SectionTitle id="pricing-title" script={pricing.script} title={pricing.title} caps={false} layout="stack" />
+          <SectionTitle id="pricing-title" script={pricing.script} title={pricing.title} />
 
           {pricing.packages.length > 0 ? (
             <ul className="mt-12 grid gap-px bg-line text-left sm:grid-cols-2">
               {pricing.packages.map((pkg) => (
                 <li key={pkg.name} className="bg-cream p-8">
-                  <h3 className="text-3xl">{pkg.name}</h3>
-                  <p className="caps mt-2 text-ink-soft">{pkg.price}</p>
+                  <h3 className="text-[1.75rem] font-bold md:text-[2.25rem]">{pkg.name}</h3>
+                  <p className="font-display mt-2 text-[1.75rem] font-bold text-ink italic">{pkg.price}</p>
                   <ul className="mt-5 space-y-2 text-sm text-ink-soft">
                     {pkg.includes.map((item) => (
                       <li key={item}>{item}</li>
@@ -44,7 +44,7 @@ export function Pricing() {
               ))}
             </ul>
           ) : (
-            <p data-reveal="up" className="mx-auto mt-7 max-w-md text-[0.95rem] text-ink-soft">
+            <p data-reveal="up" className="mx-auto mt-7 max-w-md text-base text-ink-soft">
               {pricing.emptyNote}
             </p>
           )}

@@ -86,8 +86,8 @@ export function Testimonials() {
       <div className="relative mx-auto flex min-h-0 w-full max-w-[90rem] flex-1 flex-col px-4 pt-3 pb-4 md:px-8 md:pt-6 md:pb-8">
         {/* Mobile: tiêu đề nằm trên lưới. Từ lg: tiêu đề lớn đè lên hàng dưới của lưới (như ảnh mẫu) */}
         <div className={`mb-3 flex items-end justify-between gap-4 transition-opacity duration-500 ${backdrop === null ? '' : 'opacity-0'} lg:pointer-events-none lg:absolute lg:inset-x-8 lg:bottom-8 lg:z-20 lg:mb-0 lg:pr-24 lg:pb-5 lg:pl-6`}>
-          <div className="[&_h2]:text-[clamp(2.25rem,6vw,7rem)]">
-            <SectionTitle id="reviews-title" script={testimonialsIntro.script} title={testimonialsIntro.title} tone="light" align="left" layout="stack" />
+          <div>
+            <SectionTitle id="reviews-title" script={testimonialsIntro.script} title={testimonialsIntro.title} tone="light" align="left" />
           </div>
           <div data-reveal="up" className="max-w-[16rem] pb-2 text-right">
             <p className="hidden text-[0.9rem] text-on-dark/85 lg:block">{testimonialsIntro.body}</p>
@@ -133,7 +133,7 @@ export function Testimonials() {
                     }`}
                   >
                     <span className="caps text-on-dark/70">{t.source}</span>
-                    <span className="mt-2 block font-display text-[1.35rem] leading-tight text-on-dark md:mt-3 md:text-[1.75rem]">
+                    <span className="mt-2 block font-display text-xl leading-tight text-on-dark italic md:mt-3 md:text-2xl">
                       {t.name}
                     </span>
                   </span>

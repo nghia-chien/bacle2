@@ -32,9 +32,9 @@ export function Gallery() {
   return (
     <section id="bo-suu-tap" ref={scope} aria-labelledby="gallery-title" className="bg-cream px-3 py-24 md:px-5 md:py-32">
       <div className="mx-auto flex max-w-[80rem] flex-col gap-6 px-1 md:flex-row md:items-end md:justify-between md:px-3">
-        <SectionTitle id="gallery-title" script={galleryIntro.script} title={galleryIntro.title} align="left" layout="stack" />
+        <SectionTitle id="gallery-title" script={galleryIntro.script} title={galleryIntro.title} align="left" />
         <div data-reveal="up" className="max-w-xs md:pb-4 md:text-right">
-          <p className="text-[0.95rem] text-ink-soft">{galleryIntro.body}</p>
+          <p className="text-base text-ink-soft">{galleryIntro.body}</p>
           <p className="caps mt-3 text-ink-soft">{moments.length} khoảnh khắc<span className="hidden md:inline"> · rê chuột để dừng</span></p>
           <a
             href={site.facebookHref}

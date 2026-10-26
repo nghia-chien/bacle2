@@ -27,17 +27,17 @@ export function Story() {
 
       <div className="sticky top-0 flex h-dvh items-center justify-center px-6">
         <div className="max-w-lg text-center text-on-dark">
-          <h2 id="story-title" data-lines className="text-[clamp(2.5rem,5vw,4rem)]">
+          <h2 id="story-title" data-lines className="text-[2rem] md:text-[2.5rem] lg:text-[3rem]">
             <span className="block overflow-hidden pb-[0.08em]">
               <span data-line className="block">
                 {story.title}
               </span>
             </span>
           </h2>
-          <p data-reveal="up" className="script mt-4 text-[clamp(1.9rem,3.4vw,2.6rem)] text-on-dark-soft">
+          <p data-reveal="up" className="font-display mt-4 text-[1.375rem] text-on-dark-soft italic md:text-2xl">
             {story.script}
           </p>
-          <p data-reveal="up" className="mx-auto mt-6 max-w-md text-[0.95rem] leading-relaxed text-on-dark/90">
+          <p data-reveal="up" className="mx-auto mt-6 max-w-md text-base leading-relaxed text-on-dark/90">
             {story.body}
           </p>
           <div data-reveal="up" className="mt-9">

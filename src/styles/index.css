@@ -12,9 +12,12 @@
   --color-on-dark: #f6f1e7;
   --color-on-dark-soft: #cfc3b2;
   --color-error: #9b2c22;
+  /* champagne: màu chữ ký, nhạt hơn chữ đậm để tạo chiều sâu */
+  --color-champagne: #e3cfae;
 
-  --font-display: "Cormorant Garamond", "Times New Roman", serif;
-  --font-script: "Great Vibes", cursive;
+  /* Hệ chữ theo font-chu.md */
+  --font-display: "Playfair Display", "Times New Roman", serif;
+  --font-script: "Mrs Saint Delafield", cursive;
   --font-sans: "Be Vietnam Pro", system-ui, sans-serif;
 
   --tracking-display: -0.01em;
@@ -47,8 +50,10 @@
   h1,
   h2,
   h3 {
+    /* Mặc định: Playfair Italic 400, giọng kể lãng mạn (H2, tên album, trích dẫn) */
     font-family: var(--font-display);
-    font-weight: 300;
+    font-style: italic;
+    font-weight: 400;
     letter-spacing: var(--tracking-display);
     line-height: 1.05;
     text-wrap: balance;
@@ -71,6 +76,7 @@
 
 @utility caps {
   font-family: var(--font-sans);
+  font-style: normal;
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: var(--tracking-caps);
@@ -80,6 +86,7 @@
 
 @utility script {
   font-family: var(--font-script);
+  font-style: normal;
   font-weight: 400;
   letter-spacing: 0;
   line-height: 1;

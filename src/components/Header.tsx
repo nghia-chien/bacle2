@@ -89,7 +89,7 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className="font-display border-b border-line py-4 text-4xl font-light"
+                className="border-b border-line py-5 text-base tracking-[0.12em] uppercase"
               >
                 {item.label}
               </a>

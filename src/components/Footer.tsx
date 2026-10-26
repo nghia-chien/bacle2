@@ -10,7 +10,7 @@ export function Footer() {
       <div className="mx-auto grid max-w-[80rem] gap-12 md:grid-cols-12">
         <div className="md:col-span-5">
           <img src={logo.light} alt={logo.alt} width={600} height={150} loading="lazy" className="h-14 w-auto md:h-16" />
-          <p className="script mt-6 text-3xl text-on-dark-soft">{site.tagline}</p>
+          <p className="font-display mt-6 text-xl text-on-dark-soft italic">{site.tagline}</p>
           <p className="mt-4 max-w-xs text-sm text-on-dark-soft">{footer.note}</p>
         </div>
         <nav aria-label="Liên kết cuối trang" className="md:col-span-3">

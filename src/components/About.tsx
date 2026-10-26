@@ -24,18 +24,18 @@ export function About() {
             <Img photo={about.inset} sizes="11rem" />
           </div>
 
-          <h2 id="about-title" data-lines className="max-w-[12ch] text-[clamp(2.5rem,4.6vw,4rem)] md:pt-24 lg:pt-16">
+          <h2 id="about-title" data-lines className="max-w-[16ch] text-[2rem] md:pt-24 md:text-[2.5rem] lg:pt-16 lg:text-[3rem]">
             <span className="block overflow-hidden pb-[0.08em]">
               <span data-line className="block">
                 {about.title}
               </span>
             </span>
           </h2>
-          <p data-reveal="up" className="script mt-5 text-[clamp(1.9rem,3vw,2.5rem)] text-ink-soft">
+          <p data-reveal="up" className="font-display mt-5 text-[1.375rem] text-ink-soft italic md:text-2xl">
             {about.script}
           </p>
 
-          <div className="mt-8 grid gap-5 text-[0.95rem] text-ink-soft sm:grid-cols-2 sm:gap-8">
+          <div className="mt-8 grid gap-5 text-base text-ink-soft sm:grid-cols-2 sm:gap-8">
             {about.paragraphs.map((p) => (
               <p key={p} data-reveal="up">
                 {p}

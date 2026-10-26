@@ -34,7 +34,7 @@ export function Concepts({ onChoose }: ConceptsProps) {
     <section id="concept" ref={scope} aria-labelledby="concept-title" className="bg-ivory py-24 md:py-36">
       <div className="mx-auto max-w-[80rem] px-4 md:px-8">
         <SectionTitle id="concept-title" script={conceptsIntro.script} title={conceptsIntro.title} />
-        <p data-reveal="up" className="mx-auto mt-5 max-w-md text-center text-[0.95rem] text-ink-soft">
+        <p data-reveal="up" className="mx-auto mt-5 max-w-md text-center text-base text-ink-soft">
           {conceptsIntro.body}
         </p>
       </div>
@@ -70,7 +70,7 @@ export function Concepts({ onChoose }: ConceptsProps) {
                   Xem chi tiết <IconArrow width={16} height={16} />
                 </span>
               </div>
-              <h3 className="mt-2 text-[2rem] md:text-[2.25rem]">{c.name}</h3>
+              <h3 className="mt-2 text-xl md:text-[1.375rem]">{c.name}</h3>
               <p className="mt-2 max-w-[34ch] text-sm text-ink-soft">{c.summary}</p>
             </button>
           </li>
@@ -116,8 +116,8 @@ function ConceptDetail({ concept, onClose, onChoose }: DetailProps) {
           <IconClose />
         </button>
         <p className="caps mt-6 text-ink-soft md:mt-auto">{concept.kind}</p>
-        <h3 className="mt-3 text-[clamp(2.75rem,5vw,4.25rem)]">{concept.name}</h3>
-        <p className="mt-4 max-w-sm text-[0.95rem] text-ink-soft">{concept.summary}</p>
+        <h3 className="mt-3 text-[2rem] md:text-[2.5rem] lg:text-[3rem]">{concept.name}</h3>
+        <p className="mt-4 max-w-sm text-base text-ink-soft">{concept.summary}</p>
         <p className="caps mt-6 text-ink-soft">{photos.length} ảnh mẫu</p>
         <div className="mt-8 grid gap-3 sm:flex md:grid">
           <Button onClick={onChoose}>Chọn concept này</Button>
@@ -245,8 +245,8 @@ function ConceptsScrolly({ onOpen, onChoose }: ScrollyProps) {
             }`}
           >
             <p className="caps text-ink-soft">{c.kind}</p>
-            <h3 className="mt-3 text-[clamp(3rem,4.4vw,4.5rem)]">{c.name}</h3>
-            <p className="mt-4 max-w-sm text-[0.95rem] text-ink-soft">{c.summary}</p>
+            <h3 className="mt-3 text-[2.5rem] xl:text-[3rem]">{c.name}</h3>
+            <p className="mt-4 max-w-sm text-base text-ink-soft">{c.summary}</p>
             <div className="mt-7 flex gap-2">
               {views[c.slug].slice(1).map((p, k) => (
                 <button

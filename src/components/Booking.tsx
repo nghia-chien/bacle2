@@ -98,8 +98,8 @@ export function Booking({ concept, onConceptChange }: BookingProps) {
     <section id="dat-lich" ref={scope} aria-labelledby="booking-title" className="bg-ivory px-4 py-24 md:px-8 md:py-36">
       <div className="mx-auto grid max-w-[80rem] gap-16 lg:grid-cols-12 lg:gap-12">
         <div className="lg:col-span-7">
-          <SectionTitle id="booking-title" script={bookingIntro.script} title={bookingIntro.title} align="left" caps={false} layout="stack" />
-          <p data-reveal="up" className="mt-5 max-w-md text-[0.95rem] text-ink-soft">
+          <SectionTitle id="booking-title" script={bookingIntro.script} title={bookingIntro.title} align="left" />
+          <p data-reveal="up" className="mt-5 max-w-md text-base text-ink-soft">
             {bookingIntro.body}
           </p>
 
@@ -218,7 +218,7 @@ export function Booking({ concept, onConceptChange }: BookingProps) {
             <div className="py-5">
               <dt className="caps text-ink-soft">Điện thoại / Zalo</dt>
               <dd className="mt-2">
-                <a href={site.phoneHref} className="font-display inline-flex items-center gap-3 text-3xl hover:underline">
+                <a href={site.phoneHref} className="inline-flex items-center gap-3 text-2xl font-normal tracking-[0.04em] tabular-nums hover:underline md:text-[1.75rem]">
                   <IconPhone /> {site.phoneDisplay}
                 </a>
               </dd>
