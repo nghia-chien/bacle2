@@ -16,5 +16,7 @@ export const photoSrcSet = (id: number) => `${photoSrc(id, 800)} 800w, ${photoSr
 export const logo = {
   dark: '/images/logo-dark.png',
   light: '/images/logo-light.png',
+  // Cropped transparent mark; the side swashes sit at 57% of its height
+  mark: '/images/logo-mark.png',
   alt: 'BACLE Photography',
 }
