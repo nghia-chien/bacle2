@@ -8,11 +8,21 @@ import { Img } from './ui/Img'
 import { Lightbox } from './ui/Lightbox'
 import { SectionTitle } from './ui/SectionTitle'
 
-// Dải lụa đỏ: đường cong hữu cơ, mỗi dải một bề rộng và nhịp vẽ/thu khác nhau
+/**
+ * Dải lụa đỏ: đuôi giữ ở mép trái, đầu dải đưa tới đưa lui như vải bay trong gió.
+ * `d` / `flutter`: hai dáng cong cùng cấu trúc lệnh, nội suy qua lại để thân vải gợn sóng.
+ * `reach`: khoảng đầu dải dao động (tỉ lệ chiều dài đường); `pace`: khoảng thời gian mỗi lần đưa (giây).
+ */
+// Một dải duy nhất, cong chéo qua cả hai hàng ảnh để đan qua toàn khung
 const RIBBONS = [
-  { d: 'M-60 260 C 180 80, 380 520, 620 360 S 1000 60, 1260 300', width: 26, draw: 3.2, undraw: 2.4, ease: 'sine.inOut', delay: 0 },
-  { d: 'M-60 760 C 240 600, 300 300, 600 520 S 980 900, 1260 620', width: 18, draw: 4.4, undraw: 3, ease: 'power2.inOut', delay: 2.2 },
-  { d: 'M-60 520 C 160 420, 420 760, 700 600 S 1060 220, 1260 420', width: 11, draw: 2.6, undraw: 3.4, ease: 'power3.inOut', delay: 4.1 },
+  {
+    d: 'M-60 300 C 200 100, 420 780, 660 560 S 1000 200, 1260 480',
+    flutter: 'M-60 300 C 220 160, 440 720, 680 600 S 980 260, 1220 400',
+    width: 28,
+    reach: [0.5, 1],
+    pace: [1.4, 2.6],
+    wave: 2.6,
+  },
 ]
 
 // Ánh lụa: dải màu tối → đỏ → sáng lặp theo chiều ngang, mô phỏng nếp lụa bắt sáng
@@ -23,7 +33,7 @@ const ROW_SECONDS = [34, 42]
 
 /**
  * Moments: 2 hàng × 3 ảnh bo góc chạy ngang liên tục (nhân đôi ảnh để lặp liền mạch),
- * lớp SVG dải lụa đỏ z-10 nằm giữa: ảnh z-5 nằm dưới ruy băng, ảnh z-15 nằm trên, tạo cảm giác đan qua.
+ * lớp SVG dải lụa đỏ z-10 nằm giữa: ảnh z-5 nằm dưới dải lụa, ảnh z-15 nằm trên, tạo cảm giác đan qua.
  */
 export function Gallery() {
   const scope = useRef<HTMLElement>(null)
@@ -34,15 +44,30 @@ export function Gallery() {
     () => {
       const mm = gsap.matchMedia()
       mm.add(MOTION_OK, () => {
+        const swings: gsap.core.Tween[] = []
         gsap.utils.toArray<SVGGElement>('[data-ribbon]').forEach((group, i) => {
           const r = RIBBONS[i]
-          // Bóng, thân lụa và vệt sáng vẽ/thu cùng nhau
+          // Bóng, thân lụa và vệt sáng chuyển động cùng nhau
           const strokes = group.querySelectorAll('path')
-          gsap
-            .timeline({ repeat: -1, delay: r.delay, repeatDelay: 0.3 })
-            .fromTo(strokes, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: r.draw, ease: r.ease })
-            .to(strokes, { strokeDashoffset: -1, duration: r.undraw, ease: r.ease }, `+=${0.6 + i * 0.3}`)
+
+          // Đầu dải: mỗi lần đưa tới một điểm ngẫu nhiên rồi đưa tiếp, không lặp lại y hệt
+          // (dasharray "1 1" + offset = 1 - vị trí đầu dải). Tween thuộc tính SVG, không dùng CSS
+          // strokeDashoffset vì GSAP làm tròn giá trị px về số nguyên, đầu dải sẽ nhảy cóc.
+          const swing = () => {
+            swings[i] = gsap.to(strokes, {
+              attr: { 'stroke-dashoffset': 1 - gsap.utils.random(r.reach[0], r.reach[1]) },
+              duration: gsap.utils.random(r.pace[0], r.pace[1]),
+              ease: 'sine.inOut',
+              onComplete: swing,
+            })
+          }
+          gsap.set(strokes, { attr: { 'stroke-dashoffset': 1 - r.reach[0] } })
+          gsap.delayedCall(i * 0.5, swing)
+
+          // Thân vải gợn: uốn qua lại giữa hai dáng cong
+          gsap.to(strokes, { attr: { d: r.flutter }, duration: r.wave, ease: 'sine.inOut', repeat: -1, yoyo: true })
         })
+        return () => swings.forEach((t) => t.kill())
       })
     },
     { scope },
@@ -63,7 +88,8 @@ export function Gallery() {
           <div key={r} className="flex overflow-hidden py-2 md:py-3.5">
             {[...row, ...row].map((photoIndex, k) => {
               const photo = gallery[photoIndex]
-              const over = (k + r) % 2 === 0
+              // 1/3 số ảnh nằm trên dải lụa, còn lại nằm dưới: dải vẫn lộ rõ mà vẫn thấy đan qua ảnh
+              const over = (k + r) % 3 === 0
               return (
                 <button
                   key={k}
