@@ -12,7 +12,7 @@ interface PortfolioProps {
 }
 
 const n = concepts.length
-const AUTO_MS = 3200
+const AUTO_MS = 2000
 const mod = (v: number) => ((v % n) + n) % n
 
 /** Khoảng cách gập về vòng tròn: luôn trong (-n/2, n/2] */
@@ -72,7 +72,7 @@ export function Portfolio({ onOpen }: PortfolioProps) {
         render()
         return
       }
-      pos.current += remaining * 0.16
+      pos.current += remaining * 0.22
       render()
       raf.current = requestAnimationFrame(tick)
     }

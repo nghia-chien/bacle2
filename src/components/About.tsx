@@ -55,10 +55,16 @@ export function About() {
         let running: gsap.core.Timeline | null = null
         let paused = true
 
+        // Flip (absolute: true) để lại position/top/left/width/height/transform inline trên các ô,
+        // nhất là ô vừa rời lưới. Không dọn thì lượt sau tính từ vị trí lệch → ảnh trôi dần ra ngoài.
+        const resetTiles = () =>
+          gsap.set(tiles, { clearProps: 'position,top,left,right,bottom,width,height,margin,transform,zIndex' })
+
         const run = () => {
           if (paused) return
           const next = SEQUENCE[stepIndex]
           stepIndex = (stepIndex + 1) % SEQUENCE.length
+          resetTiles()
           const state = Flip.getState(tiles, { props: 'opacity' })
           tiles.forEach((t, i) => placeInGrid(t, i, next))
           running = Flip.from(state, {
@@ -66,7 +72,11 @@ export function About() {
             absolute: true,
             onEnter: (els) => gsap.fromTo(els, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: TRANSITION.duration, ease: TRANSITION.ease }),
             onLeave: (els) => gsap.to(els, { opacity: 0, scale: 0.85, duration: TRANSITION.duration, ease: TRANSITION.ease }),
-            onComplete: run,
+            onComplete: () => {
+              running = null
+              resetTiles()
+              run()
+            },
           })
         }
 
@@ -92,7 +102,8 @@ export function About() {
           st.kill()
           running?.kill()
           tiles.forEach((el, i) => placeInGrid(el, i, 0))
-          gsap.set(tiles, { clearProps: 'transform,opacity' })
+          resetTiles()
+          gsap.set(tiles, { clearProps: 'opacity' })
         }
       })
     },

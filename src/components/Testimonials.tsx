@@ -8,13 +8,14 @@ import { Lightbox } from './ui/Lightbox'
 
 const originals: Photo[] = testimonials.map((t) => t.original)
 const background: Photo = { id: 61, alt: '', focus: '50% 30%' }
-// Nhân đôi danh sách: chạy hết nửa đầu thì nửa sau nằm đúng chỗ cũ, vòng lặp liền mạch
-const loop = [...testimonials, ...testimonials]
+// Chia ảnh đánh giá thành 2 cột xen kẽ; mỗi cột nhân đôi để chạy hết nửa đầu thì nửa sau nằm đúng chỗ cũ
+const columns = [0, 1].map((c) => testimonials.map((_, i) => i).filter((i) => i % 2 === c))
+const COLUMN_SECONDS = [46, 54]
 
 /**
- * Lời khách kiểu "client notes": nền ảnh tối, tiêu đề lớn bên trái, cột trích dẫn bên phải tự chạy từ dưới lên.
- * Rê chuột hoặc focus vào cột thì dừng. Khung cột có chiều cao cố định nên section không đổi chiều cao.
- * Giảm chuyển động: không chạy, cột tự cuộn được.
+ * Lời khách bằng ảnh: nền ảnh tối, tiêu đề lớn bên trái, bên phải 2 cột ảnh chụp đánh giá gốc
+ * chạy ngược chiều nhau. Bấm ảnh để xem lớn. Rê chuột hoặc focus vào khung thì dừng.
+ * Khung có chiều cao cố định nên section không đổi chiều cao. Giảm chuyển động: không chạy, khung tự cuộn được.
  */
 export function Testimonials() {
   const scope = useRef<HTMLElement>(null)
@@ -48,43 +49,46 @@ export function Testimonials() {
             </span>
           </h2>
           <p data-reveal="up" className="mt-6 max-w-sm text-sm text-on-dark-soft">
-            {testimonials.length} đánh giá thật từ Facebook và Google. Rê chuột vào cột để dừng đọc.
+            {testimonials.length} đánh giá thật từ Facebook và Google. Bấm vào ảnh để xem lớn.
           </p>
         </div>
 
         <div
-          tabIndex={0}
           role="region"
-          aria-label="Danh sách đánh giá, tự chạy"
-          className="group relative h-[30rem] overflow-hidden focus-visible:outline-offset-4 motion-reduce:overflow-y-auto md:h-[36rem] lg:col-span-6 lg:col-start-7"
+          aria-label="Ảnh đánh giá của khách, tự chạy"
+          className="group relative grid h-[30rem] grid-cols-2 gap-3 overflow-hidden motion-reduce:overflow-y-auto md:h-[38rem] md:gap-5 lg:col-span-7 lg:col-start-6"
           style={{
-            maskImage: 'linear-gradient(to bottom, transparent, black 12%, black 88%, transparent)',
-            WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 12%, black 88%, transparent)',
+            maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)',
           }}
         >
-          <ul className="animate-[marquee-y_60s_linear_infinite] group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] motion-reduce:animate-none">
-            {loop.map((t, k) => {
-              const copy = k >= testimonials.length
-              return (
-                <li key={k} aria-hidden={copy || undefined} className="border-b border-on-dark/15 py-8">
-                  <blockquote className="font-display text-lg leading-relaxed text-on-dark md:text-xl">“{t.quote}”</blockquote>
-                  <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                    <p className="caps text-on-dark-soft">
-                      — {t.name} · {t.source}
-                    </p>
+          {columns.map((col, c) => (
+            <ul
+              key={c}
+              className={`animate-[marquee-y_linear_infinite] group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused] motion-reduce:animate-none ${
+                c === 1 ? '[animation-direction:reverse]' : ''
+              }`}
+              style={{ animationDuration: `${COLUMN_SECONDS[c]}s` }}
+            >
+              {[...col, ...col].map((i, k) => {
+                const t = testimonials[i]
+                const copy = k >= col.length
+                return (
+                  <li key={k} aria-hidden={copy || undefined} className="pb-3 md:pb-5">
                     <button
                       type="button"
                       tabIndex={copy ? -1 : 0}
-                      onClick={() => setOpen(k % testimonials.length)}
-                      className="caps cursor-pointer text-champagne underline-offset-4 transition-colors hover:text-on-dark hover:underline"
+                      onClick={() => setOpen(i)}
+                      aria-label={`Xem lớn đánh giá của ${t.name} trên ${t.source}`}
+                      className="block aspect-square w-full cursor-zoom-in overflow-hidden rounded-xl bg-deep-soft shadow-xl shadow-black/30 transition-transform duration-500 hover:scale-[1.02] md:rounded-2xl"
                     >
-                      Xem ảnh gốc
+                      <Img photo={t.original} sizes="(min-width: 1024px) 28vw, 50vw" />
                     </button>
-                  </div>
-                </li>
-              )
-            })}
-          </ul>
+                  </li>
+                )
+              })}
+            </ul>
+          ))}
         </div>
       </div>
 
