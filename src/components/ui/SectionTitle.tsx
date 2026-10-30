@@ -13,7 +13,7 @@ interface SectionTitleProps {
  */
 export function SectionTitle({ id, script, title, tone = 'dark', align = 'center' }: SectionTitleProps) {
   const color = tone === 'dark' ? 'text-ink' : 'text-on-dark'
-  const soft = tone === 'dark' ? 'text-ink-soft' : 'text-on-dark-soft'
+  const soft = tone === 'dark' ? 'text-primary' : 'text-champagne'
 
   return (
     <h2 id={id} className={`relative ${color} ${align === 'center' ? 'text-center' : 'text-left'}`} data-lines>

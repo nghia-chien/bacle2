@@ -1,40 +1,45 @@
 import { useState } from 'react'
 import { Header } from '../components/Header'
 import { Hero } from '../components/Hero'
-import { Story } from '../components/Story'
 import { About } from '../components/About'
-import { Concepts } from '../components/Concepts'
+import { Portfolio } from '../components/Portfolio'
+import { ConceptDetail } from '../components/ConceptDetail'
+import { Process } from '../components/Process'
+import { Pricing } from '../components/Pricing'
 import { Gallery } from '../components/Gallery'
 import { Testimonials } from '../components/Testimonials'
-import { Pricing } from '../components/Pricing'
 import { Booking } from '../components/Booking'
 import { Footer } from '../components/Footer'
 import { FloatingContact } from '../components/FloatingContact'
 
 export default function App() {
-  const [concept, setConcept] = useState('')
+  // Gói hoặc concept khách đã chọn, điền sẵn vào form đặt lịch
+  const [choice, setChoice] = useState('')
+  const [detail, setDetail] = useState<string | null>(null)
+
+  const chooseAndBook = (slug: string) => {
+    setChoice(slug)
+    setDetail(null)
+    // Chờ bảng chi tiết đóng rồi mới cuộn tới form
+    window.setTimeout(() => document.getElementById('dat-lich')?.scrollIntoView({ behavior: 'smooth' }), 50)
+  }
 
   return (
     <>
-      <a
-        href="#main"
-        className="caps sr-only z-50 bg-ink px-4 py-3 text-cream focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
-      >
-        Bỏ qua đến nội dung
-      </a>
       <Header />
-      <main id="main">
+      <main className="overflow-x-clip">
         <Hero />
-        <Story />
         <About />
-        <Concepts onChoose={setConcept} />
+        <Portfolio onOpen={setDetail} />
+        <Process />
+        <Pricing onChoose={chooseAndBook} />
         <Gallery />
         <Testimonials />
-        <Pricing />
-        <Booking concept={concept} onConceptChange={setConcept} />
+        <Booking concept={choice} onConceptChange={setChoice} />
       </main>
       <Footer />
       <FloatingContact />
+      <ConceptDetail slug={detail} onClose={() => setDetail(null)} onChoose={chooseAndBook} />
     </>
   )
 }

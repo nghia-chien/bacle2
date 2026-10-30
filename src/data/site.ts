@@ -20,11 +20,12 @@ export interface NavItem {
 
 export const navLeft: NavItem[] = [
   { label: 'Giới thiệu', href: '#gioi-thieu' },
-  { label: 'Concept', href: '#concept' },
-  { label: 'Bộ sưu tập', href: '#bo-suu-tap' },
+  { label: 'Portfolio', href: '#portfolio' },
+  { label: 'Quy trình', href: '#quy-trinh' },
+  { label: 'Bảng gói', href: '#bang-gia' },
 ]
 
 export const navRight: NavItem[] = [
-  { label: 'Đánh giá', href: '#danh-gia' },
-  { label: 'Bảng giá', href: '#bang-gia' },
+  { label: 'Bộ sưu tập', href: '#bo-suu-tap' },
+  { label: 'Lời khách', href: '#danh-gia' },
 ]

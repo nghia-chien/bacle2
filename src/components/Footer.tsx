@@ -6,7 +6,7 @@ export function Footer() {
   const year = new Date().getFullYear()
   const link = 'text-on-dark-soft transition-colors hover:text-on-dark'
   return (
-    <footer className="bg-espresso px-4 pt-20 pb-28 text-on-dark md:px-8 md:pb-12">
+    <footer className="bg-deep px-4 pt-20 pb-28 text-on-dark md:px-8 md:pb-12">
       <div className="mx-auto grid max-w-[80rem] gap-12 md:grid-cols-12">
         <div className="md:col-span-5">
           <img src={logo.light} alt={logo.alt} width={600} height={150} loading="lazy" className="h-14 w-auto md:h-16" />

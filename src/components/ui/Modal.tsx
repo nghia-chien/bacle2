@@ -59,7 +59,7 @@ export function Modal({ open, onClose, label, className = '', exitMs = 0, childr
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}
-      className={`group m-0 h-dvh max-h-none w-screen max-w-none bg-transparent p-0 backdrop:bg-espresso/80 backdrop:transition-opacity backdrop:duration-700 open:animate-[modal-in_.35s_var(--ease-soft)] data-closing:backdrop:opacity-0 ${className}`}
+      className={`group m-0 h-dvh max-h-none w-screen max-w-none bg-transparent p-0 backdrop:bg-deep/80 backdrop:transition-opacity backdrop:duration-700 open:animate-[modal-in_.35s_var(--ease-soft)] data-closing:backdrop:opacity-0 ${className}`}
     >
       {open || mounted ? children : null}
     </dialog>

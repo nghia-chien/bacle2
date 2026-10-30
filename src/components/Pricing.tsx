@@ -1,60 +1,73 @@
 import { useRef } from 'react'
-import { pricing } from '../data/pricing'
+import { concepts } from '../data/concepts'
+import { packages, pricing } from '../data/pricing'
 import { site } from '../data/site'
 import { useReveal } from '../hooks/useReveal'
 import { Img } from './ui/Img'
-import { LinkButton } from './ui/Button'
+import { Button, LinkButton } from './ui/Button'
 import { SectionTitle } from './ui/SectionTitle'
-import { IconMessenger } from './ui/Icons'
 
-/**
- * Ngược với phần Câu chuyện: ảnh nền đứng yên phủ kín viewport (sticky),
- * khối nội dung nền kem cuộn lên trên ảnh rồi đi qua.
- */
-export function Pricing() {
+interface PricingProps {
+  onChoose: (slug: string) => void
+}
+
+/** Bảng gói: mỗi gói một hàng biên tập (ảnh, tên, concept trong gói, giá, nút chọn). */
+export function Pricing({ onChoose }: PricingProps) {
   const scope = useRef<HTMLElement>(null)
   useReveal(scope)
 
   return (
-    <section id="bang-gia" ref={scope} aria-labelledby="pricing-title" className="relative isolate bg-espresso">
-      {/* Ảnh sticky nằm trong lớp absolute = đúng chiều cao section, nên dừng lại ở cuối section, không đè section sau */}
-      <div className="absolute inset-0" aria-hidden="true">
-        <div className="sticky top-0 h-dvh overflow-hidden">
-          <Img photo={pricing.background} sizes="100vw" />
-          <div className="absolute inset-0 bg-espresso/20" />
-        </div>
-      </div>
-
-      <div className="relative flex min-h-[180dvh] items-center justify-center px-4 py-[45dvh]">
-        <div className="w-full max-w-2xl bg-cream px-6 py-16 text-center shadow-[0_30px_80px_-30px_rgb(35_26_22/0.6)] md:px-14 md:py-20">
-          <SectionTitle id="pricing-title" script={pricing.script} title={pricing.title} />
-
-          {pricing.packages.length > 0 ? (
-            <ul className="mt-12 grid gap-px bg-line text-left sm:grid-cols-2">
-              {pricing.packages.map((pkg) => (
-                <li key={pkg.name} className="bg-cream p-8">
-                  <h3 className="text-[1.75rem] font-bold md:text-[2.25rem]">{pkg.name}</h3>
-                  <p className="font-display mt-2 text-[1.75rem] font-bold text-ink italic">{pkg.price}</p>
-                  <ul className="mt-5 space-y-2 text-sm text-ink-soft">
-                    {pkg.includes.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p data-reveal="up" className="mx-auto mt-7 max-w-md text-base text-ink-soft">
-              {pricing.emptyNote}
-            </p>
-          )}
-
-          <div data-reveal="up" className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-            <LinkButton href={site.zaloHref}>Nhận báo giá qua Zalo</LinkButton>
-            <LinkButton href={site.messengerHref} variant="outline">
-              <IconMessenger width={18} height={18} /> Messenger
-            </LinkButton>
+    <section ref={scope} id="bang-gia" aria-labelledby="pricing-title" className="bg-cream px-4 py-24 md:px-8 md:py-36">
+      <div className="mx-auto max-w-[80rem]">
+        <div className="grid gap-6 md:grid-cols-12 md:items-end">
+          <div className="md:col-span-6">
+            <SectionTitle id="pricing-title" script={pricing.script} title={pricing.title} align="left" />
           </div>
+          <p data-reveal="up" className="max-w-md text-base text-ink-soft md:col-span-5 md:col-start-8">
+            {pricing.note}
+          </p>
+        </div>
+
+        <ul className="mt-14 border-t border-line md:mt-20">
+          {packages.map((pkg, i) => {
+            const list = concepts.filter((c) => c.kind === pkg.kind)
+            return (
+              <li
+                key={pkg.slug}
+                data-reveal="up"
+                className="grid grid-cols-[5.5rem_1fr] gap-x-5 gap-y-5 border-b border-line py-8 md:grid-cols-[3rem_9rem_1fr_auto] md:items-center md:gap-x-10 md:py-10"
+              >
+                <span className="caps hidden text-ink-soft md:block">{String(i + 1).padStart(2, '0')}</span>
+                <div className="aspect-[4/5] overflow-hidden bg-sand">
+                  <Img photo={pkg.photo} sizes="(min-width: 768px) 9rem, 5.5rem" />
+                </div>
+                <div>
+                  <h3 className="text-3xl font-bold md:text-[2.75rem]">{pkg.name}</h3>
+                  <p className="mt-2 max-w-md text-sm text-ink-soft">{pkg.summary}</p>
+                  {pkg.includes?.length ? (
+                    <ul className="mt-3 space-y-1 text-sm text-ink">
+                      {pkg.includes.map((item) => (
+                        <li key={item}>— {item}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                  {list.length ? (
+                    <p className="caps mt-4 leading-relaxed text-ink-soft">{list.map((c) => c.name).join(' · ')}</p>
+                  ) : null}
+                </div>
+                <div className="col-span-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between md:col-span-1 md:flex-col md:items-end">
+                  <p className="font-display text-2xl italic md:text-right">{pkg.price ?? pricing.priceFallback}</p>
+                  <Button variant="outline" onClick={() => onChoose(pkg.slug)}>
+                    Chọn gói này
+                  </Button>
+                </div>
+              </li>
+            )
+          })}
+        </ul>
+
+        <div data-reveal="up" className="mt-10 flex justify-center">
+          <LinkButton href={site.zaloHref}>Nhận báo giá qua Zalo</LinkButton>
         </div>
       </div>
     </section>

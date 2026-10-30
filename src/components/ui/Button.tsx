@@ -6,10 +6,10 @@ const base =
   'caps inline-flex min-h-12 items-center justify-center gap-3 px-7 py-3 text-center transition-[background-color,color,border-color] duration-300 ease-(--ease-soft) cursor-pointer disabled:cursor-not-allowed disabled:opacity-50'
 
 const variants: Record<Variant, string> = {
-  solid: 'bg-ink text-cream border border-ink hover:bg-transparent hover:text-ink',
-  outline: 'border border-ink/70 text-ink hover:bg-ink hover:text-cream',
+  solid: 'bg-primary text-on-dark border border-primary hover:bg-primary-dark hover:border-primary-dark',
+  outline: 'border border-primary/60 text-primary hover:bg-primary hover:text-on-dark',
   light: 'border border-on-dark/70 text-on-dark hover:bg-on-dark hover:text-ink',
-  'solid-light': 'bg-on-dark text-ink border border-on-dark hover:bg-transparent hover:text-on-dark',
+  'solid-light': 'bg-on-dark text-primary border border-on-dark hover:bg-transparent hover:text-on-dark',
 }
 
 interface Common {

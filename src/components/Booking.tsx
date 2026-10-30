@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
 import { bookingIntro } from '../data/content'
 import { concepts } from '../data/concepts'
+import { packages } from '../data/pricing'
 import { site } from '../data/site'
 import { useReveal } from '../hooks/useReveal'
 import { Button, LinkButton } from './ui/Button'
@@ -53,7 +54,13 @@ export function Booking({ concept, onConceptChange }: BookingProps) {
     if (result) resultRef.current?.focus()
   }, [result])
 
-  const conceptName = concepts.find((c) => c.slug === concept)?.name ?? 'Cần tư vấn thêm'
+  const chosenConcept = concepts.find((c) => c.slug === concept)
+  const chosenPackage = packages.find((p) => p.slug === concept || p.kind === chosenConcept?.kind)
+  const conceptName = chosenConcept
+    ? `Gói ${chosenPackage?.name ?? chosenConcept.kind} – ${chosenConcept.name}`
+    : chosenPackage
+      ? `Gói ${chosenPackage.name} (cần tư vấn concept)`
+      : 'Cần tư vấn thêm'
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -69,7 +76,7 @@ export function Booking({ concept, onConceptChange }: BookingProps) {
       `- Tên: ${form.name.trim()}`,
       `- SĐT: ${form.phone.trim()}`,
       `- Ngày dự kiến: ${formatDate(form.date)}`,
-      `- Concept: ${conceptName}`,
+      `- Gói / concept: ${conceptName}`,
       form.message.trim() ? `- Lời nhắn: ${form.message.trim()}` : '',
     ]
       .filter(Boolean)
@@ -177,7 +184,7 @@ export function Booking({ concept, onConceptChange }: BookingProps) {
               </div>
               <div>
                 <label htmlFor={`${uid}-concept`} className={label}>
-                  Concept
+                  Gói / concept
                 </label>
                 <select
                   id={`${uid}-concept`}
@@ -186,10 +193,17 @@ export function Booking({ concept, onConceptChange }: BookingProps) {
                   className={`${input} cursor-pointer`}
                 >
                   <option value="">Cần tư vấn thêm</option>
-                  {concepts.map((c) => (
-                    <option key={c.slug} value={c.slug}>
-                      {c.name}
-                    </option>
+                  {packages.map((pkg) => (
+                    <optgroup key={pkg.slug} label={`Gói ${pkg.name}`}>
+                      <option value={pkg.slug}>Gói {pkg.name} – chưa chọn concept</option>
+                      {concepts
+                        .filter((c) => c.kind === pkg.kind)
+                        .map((c) => (
+                          <option key={c.slug} value={c.slug}>
+                            {c.name}
+                          </option>
+                        ))}
+                    </optgroup>
                   ))}
                 </select>
               </div>

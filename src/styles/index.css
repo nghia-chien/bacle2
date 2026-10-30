@@ -1,24 +1,34 @@
 @import "tailwindcss";
 
-@theme {
-  --color-cream: #f6f1e7;
-  --color-ivory: #fbf8f2;
-  --color-sand: #e9e0d1;
-  --color-line: #d8ccb9;
-  --color-ink: #2b211c;
-  --color-ink-soft: #5c4e43;
-  --color-espresso: #231a16;
-  --color-espresso-soft: #3a2d26;
-  --color-on-dark: #f6f1e7;
-  --color-on-dark-soft: #cfc3b2;
-  --color-error: #9b2c22;
-  /* champagne: màu chữ ký, nhạt hơn chữ đậm để tạo chiều sâu */
-  --color-champagne: #e3cfae;
+@theme static {
+  /* Nền trắng kem tươi sáng (theo sale.md) + màu chủ đạo đỏ rượu vang */
+  --color-cream: #fbf7f1;
+  --color-ivory: #fffdfa;
+  --color-sand: #f1e6dc;
+  --color-line: #e6d6ca;
+  --color-ink: #2b1b1d;
+  --color-ink-soft: #6b5557;
+  --color-primary: #9b1b30;
+  --color-primary-dark: #7a1324;
+  /* nền các section tối: đỏ rượu vang thẫm */
+  --color-deep: #3b0e16;
+  --color-deep-soft: #561a24;
+  --color-on-dark: #fcf4ef;
+  --color-on-dark-soft: #e6cbc8;
+  --color-error: #b3261e;
+  /* champagne: màu chữ ký, điểm nhấn trên nền tối */
+  --color-champagne: #ecd3ad;
+  /* dải lụa đỏ ở Moments: tối → chính → ánh sáng */
+  --color-ribbon-dark: #8a0d22;
+  --color-ribbon: #c8142f;
+  --color-ribbon-light: #f2677b;
 
-  /* Hệ chữ theo font-chu.md */
+  /* Hệ chữ */
   --font-display: "Playfair Display", "Times New Roman", serif;
   --font-script: "Mrs Saint Delafield", cursive;
   --font-sans: "Be Vietnam Pro", system-ui, sans-serif;
+  /* chữ không chân đậm cho các bước quy trình */
+  --font-grotesk: "Montserrat", "Be Vietnam Pro", system-ui, sans-serif;
 
   --tracking-display: -0.01em;
   --tracking-caps: 0.24em;
@@ -109,9 +119,24 @@
     opacity: 0;
   }
 }
-@keyframes float {
+/* Trình duyệt không hỗ trợ clip-path polygon: lùi về khung bo góc đơn giản */
+@supports not (clip-path: polygon(0 0, 100% 0, 100% 100%)) {
+  .process-mask {
+    border-radius: 1rem;
+  }
+}
+
+/* Cột lời khách: chạy lên đúng nửa chiều cao (một bộ đánh giá) rồi lặp */
+@keyframes marquee-y {
   to {
-    transform: translateY(-14px);
+    transform: translateY(-50%);
+  }
+}
+
+/* Mỗi ảnh tự trượt đúng 3 lần bề rộng của nó = một bộ ảnh, nên vòng lặp liền mạch */
+@keyframes marquee-x {
+  to {
+    transform: translateX(-300%);
   }
 }
 @keyframes slide-in-right {
@@ -122,11 +147,6 @@
 @keyframes slide-out-right {
   to {
     transform: translateX(100%);
-  }
-}
-@keyframes reel-up {
-  to {
-    transform: translateY(-50%);
   }
 }
 @keyframes fade-in {

@@ -1,62 +1,90 @@
 import type { Photo } from './images'
 
 export const hero = {
-  wordmark: 'BACLE',
-  sub: 'Photography',
-  meta: '',
-  headline: [''],
+  /** Tiêu đề tách đôi: phần trái trên + phần phải dưới, tách ra và mờ dần khi cuộn */
+  splitTop: 'BACLE',
+  splitBottom: 'Photography',
+  kicker: 'Chụp ảnh cưới · TP. Hồ Chí Minh',
+  tagline: 'all you need is love',
+  media: {
+    id: 28,
+    alt: 'Cô dâu chú rể nắm tay trong sảnh cửa sổ vòm ngập nắng',
+    focus: '44% 62%',
+  } satisfies Photo,
+  /** Nhãn khung ngắm hiện khi ảnh gần phủ kín màn hình */
+  frame: { left: 'BACLE Photography', right: 'TP. Hồ Chí Minh' },
   primaryCta: { label: 'Đặt lịch chụp', href: '#dat-lich' },
-  secondaryCta: { label: 'Xem concept', href: '#concept' },
-  /** Dải ảnh chạy từ phải sang trái, ảnh sau đè ảnh trước, so le trên/dưới */
-  reel: [
-    { id: 57, alt: 'Cô dâu chú rể cười rạng rỡ dưới nắng', focus: '50% 30%' },
-    { id: 91, alt: 'Cô dâu nghiêng đầu với bó hoa trắng trong studio' },
-    { id: 1, alt: 'Ảnh đen trắng cặp đôi hôn nhau', focus: '50% 30%' },
-    { id: 47, alt: 'Cô dâu cười ôm bó hoa, chú rể ôm từ phía sau' },
-    { id: 31, alt: 'Cặp đôi trên cầu thang cổ điển dưới đèn chùm' },
-    { id: 50, alt: 'Cô dâu ngồi giữa hoa đồng nội' },
-    { id: 61, alt: 'Ảnh đen trắng cô dâu cười bên chú rể' },
-    { id: 87, alt: 'Chú rể đeo nhẫn cho cô dâu trước vòm hoa' },
-  ] satisfies Photo[],
+  secondaryCta: { label: 'Xem concept', href: '#portfolio' },
 }
 
-export const story = {
-  script: 'our story',
-  title: 'Mỗi cặp đôi, một câu chuyện riêng',
-  body: 'Từ buổi chụp trong studio, ngoài thiên nhiên đến trọn vẹn ngày cưới, BACLE đồng hành để giữ lại cảm xúc thật nhất của hai bạn.',
-  cta: { label: 'Xem bộ sưu tập', href: '#bo-suu-tap' },
-  /** Ảnh dọc lớn làm nền cả section, cuộn theo trang; chữ đứng yên giữa viewport */
-  background: { id: 31, alt: 'Cặp đôi trên cầu thang cổ điển dưới đèn chùm', focus: '50% 40%' } satisfies Photo,
-}
+/** Đoạn văn hiện dần từng chữ ngay sau hero */
+export const manifesto =
+  'BACLE Photography là studio chụp ảnh cưới tại TP. Hồ Chí Minh, dành cho những cặp đôi đang chuẩn bị về chung một nhà. Tông ảnh tươi sáng, nhẹ nhàng, giữ lại cảm xúc thật nhất của hai bạn.'
 
 export const about = {
+  script: 'về BACLE',
   title: 'Xin chào, chúng mình là BACLE',
-  script: 'all you need is love',
-  paragraphs: [
-    'BACLE Photography là studio chụp ảnh cưới tại TP. Hồ Chí Minh, dành cho những cặp đôi đang chuẩn bị về chung một nhà.',
-    'Tông ảnh tươi sáng, nhẹ nhàng. Concept đa dạng: studio tối giản, studio hoa, ngoại cảnh và phóng sự ngày cưới.',
-  ],
+  body: 'Concept đa dạng: studio tối giản, studio hoa, ngoại cảnh và phóng sự ngày cưới. Ekip đồng hành từ khâu tư vấn, chọn váy, makeup đến buổi chụp.',
   cta: { label: 'Nhắn tư vấn qua Zalo' },
-  main: { id: 72, alt: 'Chân dung đen trắng cô dâu nhìn nghiêng' } satisfies Photo,
-  inset: { id: 80, alt: 'Cận cảnh bàn tay cô dâu đeo nhẫn cưới' } satisfies Photo,
 }
 
-export const conceptsIntro = {
-  script: 'our styles',
-  title: 'Concept',
-  body: 'Bấm vào từng concept để xem thêm ảnh và chọn phong cách hợp với hai bạn.',
+export const portfolioIntro = {
+  script: 'portfolio',
+  title: 'Concept của BACLE',
+  body: 'Kéo, vuốt hoặc dùng phím mũi tên để xem. Bấm vào ảnh ở giữa để xem chi tiết concept.',
 }
+
+export interface ProcessStep {
+  no: string
+  title: string
+  body: string
+  photo: Photo
+}
+
+export const processIntro = {
+  script: 'quy trình',
+  title: 'Từ lời tư vấn đến bộ ảnh cưới',
+  /** Ảnh mặc định khi chưa chọn bước nào */
+  cover: { id: 31, alt: 'Cặp đôi trên cầu thang cổ điển dưới đèn chùm' } satisfies Photo,
+}
+
+// Các bước lấy từ những gì khách đã kể lại trong đánh giá (tư vấn, chọn váy, makeup, chụp, nhận hình).
+export const processSteps: ProcessStep[] = [
+  {
+    no: '01',
+    title: 'Tư vấn',
+    body: 'Trao đổi ngày chụp, phong cách và chọn concept hợp với hai bạn.',
+    photo: { id: 43, alt: 'Cặp đôi nhìn nhau cười trong studio hoa' },
+  },
+  {
+    no: '02',
+    title: 'Váy & makeup',
+    body: 'Ekip hỗ trợ chọn trang phục và trang điểm kỹ trước giờ chụp.',
+    photo: { id: 64, alt: 'Cô dâu đội voan ren nhìn xuống', focus: '70% 40%' },
+  },
+  {
+    no: '03',
+    title: 'Ngày chụp',
+    body: 'Được hướng dẫn tạo dáng tận tình để hai bạn thoải mái, tự nhiên.',
+    photo: { id: 13, alt: 'Cặp đôi bước về phía nhau trong studio' },
+  },
+  {
+    no: '04',
+    title: 'Nhận ảnh',
+    body: 'BACLE gửi lại bộ ảnh hoàn thiện để hai bạn lưu giữ.',
+    photo: { id: 1, alt: 'Ảnh đen trắng cặp đôi hôn nhau', focus: '50% 30%' },
+  },
+]
 
 export const galleryIntro = {
   script: 'moments',
   title: 'Bộ sưu tập',
-  body: 'Một vài khoảnh khắc BACLE đã lưu giữ.',
+  body: 'Một vài khoảnh khắc BACLE đã lưu giữ. Bấm vào ảnh để xem lớn.',
 }
 
 export const testimonialsIntro = {
-  script: 'kind words',
+  script: 'chia sẻ thật từ khách',
   title: 'Lời khách',
-  body: 'Những chia sẻ thật từ các cặp đôi đã chụp cùng BACLE.',
 }
 
 export const bookingIntro = {

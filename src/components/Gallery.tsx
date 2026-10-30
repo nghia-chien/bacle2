@@ -1,92 +1,125 @@
 import { useRef, useState } from 'react'
-import { moments } from '../data/gallery'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
 import { galleryIntro } from '../data/content'
-import { site } from '../data/site'
-import type { Photo } from '../data/images'
-import { useReveal } from '../hooks/useReveal'
+import { gallery, galleryRows } from '../data/gallery'
+import { MOTION_OK, useReveal } from '../hooks/useReveal'
 import { Img } from './ui/Img'
 import { Lightbox } from './ui/Lightbox'
 import { SectionTitle } from './ui/SectionTitle'
-import { IconArrow } from './ui/Icons'
 
-const COLUMNS = 4
-/** Giây cho mỗi ảnh đi qua: cột càng nhiều ảnh thì chạy càng lâu, tốc độ các cột gần như nhau */
-const SECONDS_PER_PHOTO = 7
+// Dải lụa đỏ: đường cong hữu cơ, mỗi dải một bề rộng và nhịp vẽ/thu khác nhau
+const RIBBONS = [
+  { d: 'M-60 260 C 180 80, 380 520, 620 360 S 1000 60, 1260 300', width: 26, draw: 3.2, undraw: 2.4, ease: 'sine.inOut', delay: 0 },
+  { d: 'M-60 760 C 240 600, 300 300, 600 520 S 980 900, 1260 620', width: 18, draw: 4.4, undraw: 3, ease: 'power2.inOut', delay: 2.2 },
+  { d: 'M-60 520 C 160 420, 420 760, 700 600 S 1060 220, 1260 420', width: 11, draw: 2.6, undraw: 3.4, ease: 'power3.inOut', delay: 4.1 },
+]
 
-/** Chia ảnh vào các cột theo vòng (ảnh 0 -> cột 0, ảnh 1 -> cột 1, ...) và nhớ vị trí gốc để mở lightbox */
-const columns: { photo: Photo; index: number }[][] = Array.from({ length: COLUMNS }, (_, c) =>
-  moments.map((photo, index) => ({ photo, index })).filter((_, i) => i % COLUMNS === c),
-)
+// Ánh lụa: dải màu tối → đỏ → sáng lặp theo chiều ngang, mô phỏng nếp lụa bắt sáng
+const SHEEN = ['ribbon-dark', 'ribbon', 'ribbon-light', 'ribbon', 'ribbon-dark', 'ribbon', 'ribbon-light', 'ribbon', 'ribbon-dark']
+
+// Hàng 1 và 2 chạy với tốc độ hơi khác nhau cho tự nhiên
+const ROW_SECONDS = [34, 42]
 
 /**
- * Bộ sưu tập: các cột ảnh chạy dọc liên tục, cột chẵn đi lên, cột lẻ đi xuống, nên trong một khung
- * cao gần bằng màn hình khách lướt qua được toàn bộ ảnh mà không phải cuộn trang dài.
- * Rê chuột vào cột nào thì riêng cột đó dừng lại để xem kỹ, bấm ảnh để xem lớn.
- * Mobile hiện 2 cột. Khi tắt chuyển động: không chạy, khung cho cuộn tay.
+ * Moments: 2 hàng × 3 ảnh bo góc chạy ngang liên tục (nhân đôi ảnh để lặp liền mạch),
+ * lớp SVG dải lụa đỏ z-10 nằm giữa: ảnh z-5 nằm dưới ruy băng, ảnh z-15 nằm trên, tạo cảm giác đan qua.
  */
 export function Gallery() {
   const scope = useRef<HTMLElement>(null)
-  const [index, setIndex] = useState<number | null>(null)
+  const [open, setOpen] = useState<number | null>(null)
   useReveal(scope)
 
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia()
+      mm.add(MOTION_OK, () => {
+        gsap.utils.toArray<SVGGElement>('[data-ribbon]').forEach((group, i) => {
+          const r = RIBBONS[i]
+          // Bóng, thân lụa và vệt sáng vẽ/thu cùng nhau
+          const strokes = group.querySelectorAll('path')
+          gsap
+            .timeline({ repeat: -1, delay: r.delay, repeatDelay: 0.3 })
+            .fromTo(strokes, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: r.draw, ease: r.ease })
+            .to(strokes, { strokeDashoffset: -1, duration: r.undraw, ease: r.ease }, `+=${0.6 + i * 0.3}`)
+        })
+      })
+    },
+    { scope },
+  )
+
   return (
-    <section id="bo-suu-tap" ref={scope} aria-labelledby="gallery-title" className="bg-cream px-3 py-24 md:px-5 md:py-32">
-      <div className="mx-auto flex max-w-[80rem] flex-col gap-6 px-1 md:flex-row md:items-end md:justify-between md:px-3">
-        <SectionTitle id="gallery-title" script={galleryIntro.script} title={galleryIntro.title} align="left" />
-        <div data-reveal="up" className="max-w-xs md:pb-4 md:text-right">
-          <p className="text-base text-ink-soft">{galleryIntro.body}</p>
-          <p className="caps mt-3 text-ink-soft">{moments.length} khoảnh khắc<span className="hidden md:inline"> · rê chuột để dừng</span></p>
-          <a
-            href={site.facebookHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="caps mt-4 inline-flex items-center gap-2 border-b border-ink/40 pb-1 text-ink transition-colors hover:border-ink"
-          >
-            Xem thêm trên Facebook <IconArrow width={16} height={16} />
-          </a>
-        </div>
+    <section ref={scope} id="bo-suu-tap" aria-labelledby="gallery-title" className="relative isolate bg-ivory py-24 md:py-36">
+      <div className="mx-auto max-w-[80rem] px-4 md:px-8">
+        <SectionTitle id="gallery-title" script={galleryIntro.script} title={galleryIntro.title} />
+        <p data-reveal="up" className="mx-auto mt-5 max-w-md text-center text-base text-ink-soft">
+          {galleryIntro.body}
+        </p>
       </div>
 
-      <div
-        className="mx-auto mt-12 grid h-[110dvh] max-w-[90rem] grid-cols-2 gap-3 overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_8%,black_92%,transparent)] md:mt-16 md:h-[130dvh] md:grid-cols-3 md:gap-4 lg:grid-cols-4 motion-reduce:overflow-y-auto"
-        aria-label="Ảnh trong bộ sưu tập"
-        role="region"
-      >
-        {columns.map((col, c) => (
-          <div key={c} className={`min-w-0 ${c === 2 ? 'hidden md:block' : ''} ${c === 3 ? 'hidden lg:block' : ''}`}>
-            <ul
-              style={{ animationDuration: `${col.length * SECONDS_PER_PHOTO}s` }}
-              className={`flex flex-col motion-safe:animate-[reel-up_linear_infinite] hover:[animation-play-state:paused] ${
-                c % 2 === 1 ? 'motion-safe:[animation-direction:reverse]' : ''
-              }`}
-            >
-              {/* Nhân đôi danh sách để vòng lặp liền mạch; bản sao ẩn với trình đọc màn hình */}
-              {[...col, ...col].map(({ photo, index: i }, k) => {
-                const clone = k >= col.length
-                return (
-                  <li key={`${photo.id}-${k}`} aria-hidden={clone || undefined} className={`pb-3 md:pb-4 ${clone ? 'motion-reduce:hidden' : ''}`}>
-                    <button
-                      type="button"
-                      tabIndex={clone ? -1 : undefined}
-                      onClick={() => setIndex(i)}
-                      className="group relative block aspect-[2/3] w-full cursor-zoom-in overflow-hidden bg-sand"
-                      aria-label={`Xem lớn: ${photo.alt}`}
-                    >
-                      <Img
-                        photo={clone ? { ...photo, alt: '' } : photo}
-                        sizes="(min-width: 1024px) 22vw, (min-width: 768px) 31vw, 48vw"
-                        className="transition-transform duration-[1.2s] ease-(--ease-soft) group-hover:scale-[1.04]"
-                      />
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
+      {/* Không đặt z-index/transform ở lớp bọc để ảnh và SVG cùng một ngữ cảnh xếp chồng */}
+      <div className="relative mt-12 md:mt-16">
+        {galleryRows.map((row, r) => (
+          <div key={r} className="flex overflow-hidden py-2 md:py-3.5">
+            {[...row, ...row].map((photoIndex, k) => {
+              const photo = gallery[photoIndex]
+              const over = (k + r) % 2 === 0
+              return (
+                <button
+                  key={k}
+                  type="button"
+                  tabIndex={k < row.length ? 0 : -1}
+                  aria-hidden={k >= row.length}
+                  aria-label={`Xem lớn: ${photo.alt}`}
+                  onClick={() => setOpen(photoIndex)}
+                  className={`relative w-1/3 shrink-0 cursor-zoom-in px-2 animate-[marquee-x_linear_infinite] motion-reduce:animate-none md:px-3.5 ${
+                    over ? 'z-15' : 'z-5'
+                  }`}
+                  style={{ animationDuration: `${ROW_SECONDS[r]}s` }}
+                >
+                  <span className="block aspect-[4/5] overflow-hidden rounded-xl bg-sand md:aspect-square md:rounded-3xl">
+                    <Img photo={photo} sizes="34vw" />
+                  </span>
+                </button>
+              )
+            })}
           </div>
         ))}
+
+        <svg
+          aria-hidden
+          viewBox="0 0 1200 1000"
+          preserveAspectRatio="xMidYMid slice"
+          className="pointer-events-none absolute inset-0 z-10 size-full"
+        >
+          <defs>
+            <linearGradient id="silk" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="1200" y2="240">
+              {SHEEN.map((c, k) => (
+                <stop key={k} offset={k / (SHEEN.length - 1)} style={{ stopColor: `var(--color-${c})` }} />
+              ))}
+            </linearGradient>
+          </defs>
+          {RIBBONS.map((r) => (
+            <g key={r.d} data-ribbon className="fill-none" strokeLinecap="round">
+              {/* bóng đổ mềm phía dưới */}
+              <path d={r.d} pathLength={1} strokeDasharray="1 1" strokeWidth={r.width} transform="translate(0 6)" className="stroke-deep/20" />
+              {/* thân lụa */}
+              <path d={r.d} pathLength={1} strokeDasharray="1 1" strokeWidth={r.width} stroke="url(#silk)" />
+              {/* vệt sáng dọc mép trên */}
+              <path
+                d={r.d}
+                pathLength={1}
+                strokeDasharray="1 1"
+                strokeWidth={Math.max(2, r.width * 0.16)}
+                transform={`translate(0 ${-r.width * 0.22})`}
+                className="stroke-ribbon-light/70"
+              />
+            </g>
+          ))}
+        </svg>
       </div>
 
-      <Lightbox photos={moments} index={index} onChange={setIndex} label="Xem ảnh bộ sưu tập" />
+      <Lightbox photos={gallery} index={open} onChange={setOpen} label="Bộ sưu tập ảnh" />
     </section>
   )
 }
